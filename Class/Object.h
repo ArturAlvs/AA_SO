@@ -1,9 +1,11 @@
+
 class Object {
 	protected:
     	int width, height;
     	int x, y;
 	public:
-  		Object(int, int, int, int);
+      Object(int, int, int, int);
+  		Object();
   		~Object();
   		// X & Y
    		void set_position (int,int);
@@ -20,10 +22,13 @@ class Object {
 };
 
 Object::Object(int w, int h, int x_parameter, int y_parameter){
-	width = w;
-	height = h;
-	x = x_parameter;
-	y = y_parameter;
+  width = w;
+  height = h;
+  x = x_parameter;
+  y = y_parameter;
+}
+Object::Object(){
+  
 }
 Object::~Object(){
 
