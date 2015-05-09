@@ -14,6 +14,8 @@
 
 using namespace std;
 
+const int FPS = 10;
+
 
 int main(int argc, char const *argv[]){
 	
@@ -32,7 +34,19 @@ int main(int argc, char const *argv[]){
 
 	SDL_Event event;
 
+	//background
+	SDL_Surface* background = IMG_Load("Media/space.jpg");
+
+	cout << background << endl;
+
+	Nave *player = new Nave( 50, 50, ((screen->w / 2) - 25), ((screen->h / 2) - 25) );
+	player->setSprite("Media/nave.png");
+
+
+
+	//Laço principal
 	while(running){
+		int t1 = SDL_GetTicks();
 
 		while(SDL_PollEvent(&event)){
 			if( event.type==SDL_QUIT){
@@ -41,18 +55,32 @@ int main(int argc, char const *argv[]){
 			if( event.type == SDL_MOUSEMOTION )	{
 				
 			}
-			// if(event.type == SDL_KEYDOWN){
-			// 	switch( event.key.keysym.sym )
-			// 	{
-			// 		case SDLK_UP: { player->moveShip(screen); break;}
-			// 		case SDLK_LEFT:{ player->increaseAngle(); break;}
-			// 		case SDLK_RIGHT:{player->decreaseAngle(); break;}
-			// 	}
-			// }
+			if(event.type == SDL_KEYDOWN){
+				switch( event.key.keysym.sym )
+				{
+					case SDLK_UP: { player->moveNave(screen); break;}
+					case SDLK_LEFT:{ player->increaseAngulo(); break;}
+					case SDLK_RIGHT:{ player->decreaseAngulo(); break;}
+				}
+
+			}
 		}
 
+		SDL_BlitSurface(background,NULL,screen,NULL);
+
+		player->blit(screen);
+		player->moveNave(screen);
+
+		int t2 = SDL_GetTicks();
+        int wait = t2 - t1;
+        wait = (1000/FPS) - wait;
+        if(wait > 0){
+        	SDL_Delay(wait);
+        }
+
+		SDL_Flip(screen);
 
 	}
 
-	return 0;
+	SDL_Quit();
 }

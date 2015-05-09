@@ -14,9 +14,9 @@ Asteroid::Asteroid(bool big) : Object(){
 	isBig = big;
 
 	if (big){
-		width = 50, height = 50;
-		x = 0;
-		y = 0;
+		position.w = 50, position.h = 50;
+		position.x = 0;
+		position.y = 0;
 	}
 
 

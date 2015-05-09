@@ -4,6 +4,8 @@ class Shoot : public Object{
 	public:
 		Shoot(int,int,int,int);
 		~Shoot();
+		void set_vetor(int, int);
+		int* get_vetor();
 
 };
 
