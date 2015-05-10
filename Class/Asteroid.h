@@ -6,6 +6,9 @@ class Asteroid : public Object{
 	public:
 		Asteroid(bool);
 		~Asteroid();
+
+		bool get_isBig();
+		void set_isBig(bool);
 	
 };
 
@@ -15,9 +18,19 @@ Asteroid::Asteroid(bool big) : Object(){
 
 	if (big){
 		position.w = 50, position.h = 50;
-		position.x = 0;
-		position.y = 0;
 	}
 
 
+}
+
+Asteroid::~Asteroid(){
+	
+}
+
+bool Asteroid::get_isBig(){
+	return isBig;
+}
+
+void Asteroid::set_isBig(bool big){
+	this->isBig = big;
 }

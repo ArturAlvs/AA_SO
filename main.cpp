@@ -7,14 +7,17 @@
 
 #include "Class/Object.h"
 #include "Class/Eve.h"
+
 #include "Class/Nave.h"
 #include "Class/Asteroid.h"
+#include "Class/Asteroids.h"
+
 #include "Class/Shoot.h"
 #include "Class/Eve_Poison.h"
 
 using namespace std;
 
-const int FPS = 10;
+const int FPS = 20;
 
 
 int main(int argc, char const *argv[]){
@@ -24,11 +27,11 @@ int main(int argc, char const *argv[]){
 
 	//INITIALIZING SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_WM_SetCaption("DroneNudes", NULL);
+	SDL_WM_SetCaption( "Nome do Jogo", NULL );
 	TTF_Init();
 	Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 );
 	SDL_Surface *screen = NULL;
-	screen=SDL_SetVideoMode(800,640,16,SDL_SWSURFACE);
+	screen = SDL_SetVideoMode( 800, 640, 16, SDL_SWSURFACE );
 
 	bool running = true;
 
@@ -37,10 +40,10 @@ int main(int argc, char const *argv[]){
 	//background
 	SDL_Surface* background = IMG_Load("Media/space.jpg");
 
-	cout << background << endl;
-
 	Nave *player = new Nave( 50, 50, ((screen->w / 2) - 25), ((screen->h / 2) - 25) );
 	player->setSprite("Media/nave.png");
+
+	Asteroids* asteroids_do_game = new Asteroids(5, screen);
 
 
 
@@ -58,7 +61,7 @@ int main(int argc, char const *argv[]){
 			if(event.type == SDL_KEYDOWN){
 				switch( event.key.keysym.sym )
 				{
-					case SDLK_UP: { player->moveNave(screen); break;}
+					case SDLK_UP: { player->moveNave(screen); player->set_moving(50); break;}
 					case SDLK_LEFT:{ player->increaseAngulo(); break;}
 					case SDLK_RIGHT:{ player->decreaseAngulo(); break;}
 				}
@@ -69,7 +72,12 @@ int main(int argc, char const *argv[]){
 		SDL_BlitSurface(background,NULL,screen,NULL);
 
 		player->blit(screen);
-		player->moveNave(screen);
+		asteroids_do_game->blit_asteroids(screen);
+
+		if (player->get_moving())
+		{
+			player->moveNave(screen);
+		}
 
 		int t2 = SDL_GetTicks();
         int wait = t2 - t1;

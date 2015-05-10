@@ -10,11 +10,11 @@ class Object {
 	protected:
 
     	SDL_Rect position; //position on the screen
-		SDL_Surface* sprite; //image of the obj
+		SDL_Surface* sprite = NULL; //image of the obj
 		int angulo;
 
 	public:
-      Object(int, int, int, int);
+     	Object(int, int, int, int);
   		Object();
   		~Object();
 
@@ -25,6 +25,7 @@ class Object {
     	int get_angulo();
   		// X & Y
    		void set_position (int,int);
+   		SDL_Rect* get_position ();
     	void set_x(int);
     	void set_y(int);
     	int get_x();
@@ -47,6 +48,8 @@ Object::Object(int width_parameter, int height_parameter, int x_parameter, int y
   position.h = height_parameter;
   position.x = x_parameter;
   position.y = y_parameter;
+
+  this->angulo = 0;
 }
 Object::Object(){
   
@@ -89,6 +92,12 @@ void Object::set_position (int x_parameter, int y_parameter) {
   position.x = x_parameter;
   position.y = y_parameter;
 }
+SDL_Rect* Object::get_position (){
+
+	return &position;
+
+};
+
 void Object::set_x (int x_parameter) {
   position.x = x_parameter;
 }
