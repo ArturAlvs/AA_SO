@@ -4,15 +4,20 @@
 #include "SDL/SDL_ttf.h"
 #include "SDL/SDL_mixer.h"
 
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 640
+
+#define QUANTIDADE_ASTEROIDS 10
+
 
 #include "Class/Object.h"
 #include "Class/Eve.h"
 
 #include "Class/Nave.h"
+#include "Class/Shoot.h"
 #include "Class/Asteroid.h"
 #include "Class/Asteroids.h"
 
-#include "Class/Shoot.h"
 #include "Class/Eve_Poison.h"
 
 using namespace std;
@@ -31,7 +36,7 @@ int main(int argc, char const *argv[]){
 	TTF_Init();
 	Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 );
 	SDL_Surface *screen = NULL;
-	screen = SDL_SetVideoMode( 800, 640, 16, SDL_SWSURFACE );
+	screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE );
 
 	bool running = true;
 
@@ -40,11 +45,13 @@ int main(int argc, char const *argv[]){
 	//background
 	SDL_Surface* background = IMG_Load("Media/space.jpg");
 
-	Nave *player = new Nave( 50, 50, ((screen->w / 2) - 25), ((screen->h / 2) - 25) );
+	Nave *player = new Nave( 50, 50, ((SCREEN_WIDTH / 2) - 25), ((SCREEN_HEIGHT / 2) - 25) );
 	player->setSprite("Media/nave.png");
 
-	Asteroids* asteroids_do_game = new Asteroids(5, screen);
+	Shoot *tiro = new Shoot( 10, 10, ((SCREEN_WIDTH / 2) - 25), ((SCREEN_HEIGHT / 2) - 25));
+	tiro->setSprite("Media/tiro.png");
 
+	Asteroids* asteroids_do_game = new Asteroids(QUANTIDADE_ASTEROIDS, screen);
 
 
 	//Laço principal
@@ -55,15 +62,20 @@ int main(int argc, char const *argv[]){
 			if( event.type==SDL_QUIT){
 				running = false;
 			}
-			if( event.type == SDL_MOUSEMOTION )	{
-				
-			}
 			if(event.type == SDL_KEYDOWN){
-				switch( event.key.keysym.sym )
-				{
-					case SDLK_UP: { player->moveNave(screen); player->set_moving(50); break;}
+
+				switch( event.key.keysym.sym ){
+					case SDLK_UP: { player->set_moving(50); break;}
 					case SDLK_LEFT:{ player->increaseAngulo(); break;}
 					case SDLK_RIGHT:{ player->decreaseAngulo(); break;}
+					case SDLK_SPACE:{ 
+						if (tiro->get_moving() <= 50){
+							tiro->set_moving(100);
+							tiro->set_angulo( player->get_angulo() );
+							tiro->set_position( ( player->get_x() + (player->get_width() / 2) ), ( player->get_y() + (player->get_height() / 2) ) );
+						}
+						break;
+					}
 				}
 
 			}
@@ -74,11 +86,27 @@ int main(int argc, char const *argv[]){
 		player->blit(screen);
 		asteroids_do_game->blit_asteroids(screen);
 
-		if (player->get_moving())
-		{
+
+		asteroids_do_game->player_collision(player); //Detectando collision
+
+		if (player->get_moving()){
 			player->moveNave(screen);
 		}
 
+		if (tiro->get_moving()){
+			tiro->blit(screen);
+
+			tiro->moveShoot(screen);
+
+			asteroids_do_game->shoot_collision(tiro); //Detectando collision
+
+		}
+
+		asteroids_do_game->moveAsteroids(screen);
+
+
+
+		//FPS------------------------
 		int t2 = SDL_GetTicks();
         int wait = t2 - t1;
         wait = (1000/FPS) - wait;

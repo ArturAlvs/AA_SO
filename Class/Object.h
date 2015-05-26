@@ -9,7 +9,7 @@ using namespace std;
 class Object {
 	protected:
 
-    	SDL_Rect position; //position on the screen
+        SDL_Rect position; //position on the screen
 		SDL_Surface* sprite = NULL; //image of the obj
 		int angulo;
 
@@ -36,6 +36,10 @@ class Object {
     	void set_height(int);
     	int get_width();
     	int get_height();
+
+        //Collision
+        bool collision(Object*);
+
     	//Sprite
     	void setSprite(string);
     	SDL_Surface* getSprite();
@@ -49,7 +53,6 @@ Object::Object(int width_parameter, int height_parameter, int x_parameter, int y
   position.x = x_parameter;
   position.y = y_parameter;
 
-  this->angulo = 0;
 }
 Object::Object(){
   
@@ -122,10 +125,28 @@ void Object::set_height (int height_parameter) {
   position.h = height_parameter;
 }
 int Object::get_width () {
-  return position.w;
+    return position.w;
 }
 int Object::get_height () {
-  return position.h;
+    return position.h;
+}
+
+//Collision
+bool Object::collision(Object *a){
+
+    if ( a->get_x() > (this->get_x() + this->get_width()) ||
+         a->get_y() > (this->get_y() + this->get_height()) ||
+         this->get_x() > (a->get_x() + a->get_width()) ||
+         this->get_y() > (a->get_y() + a->get_height()) ){
+
+        return false;
+
+    }else{
+        return true;
+    }
+
+    return false;
+
 }
 
 //Sprite

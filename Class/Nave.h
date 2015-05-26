@@ -24,13 +24,18 @@ class Nave : public Object{
      	//Angulo
      	void increaseAngulo();
      	void decreaseAngulo();
+
+     	//Damage
+     	void damage_by_asteroid();
       
 };
 
 Nave::Nave(int w, int h, int x_parameter, int y_parameter) : Object(w, h, x_parameter, y_parameter) {
 	
-  health = 100;
+  health = 5;
   this->set_moving(0);
+  this->set_angulo(90);
+
 }
 
 //Move
@@ -82,5 +87,20 @@ void Nave::decreaseAngulo(){
 	if ( angulo < 0 ){
 		angulo = 345;
 	}
+
+}
+
+
+//Damage
+void Nave::damage_by_asteroid(){
+
+	if (this->health){
+		this->health -= 1;
+	}
+
+	this->set_x( SCREEN_WIDTH / 2 );
+	this->set_y( SCREEN_HEIGHT / 2 );
+
+	this->set_moving( 0 );
 
 }
