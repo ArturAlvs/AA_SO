@@ -5,7 +5,6 @@ class Shoot : public Object{
 
 	public:
 		Shoot(int,int,int,int);
-		~Shoot();
 
 		//Move
   		void moveShoot(SDL_Surface*);

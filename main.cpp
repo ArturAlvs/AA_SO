@@ -45,13 +45,13 @@ int main(int argc, char const *argv[]){
 	//background
 	SDL_Surface* background = IMG_Load("Media/space.jpg");
 
-	Nave *player = new Nave( 50, 50, ((SCREEN_WIDTH / 2) - 25), ((SCREEN_HEIGHT / 2) - 25) );
-	player->setSprite("Media/nave.png");
+	Nave player( 50, 50, ((SCREEN_WIDTH / 2) - 25), ((SCREEN_HEIGHT / 2) - 25) );
+	player.setSprite("Media/nave.png");
 
-	Shoot *tiro = new Shoot( 10, 10, ((SCREEN_WIDTH / 2) - 25), ((SCREEN_HEIGHT / 2) - 25));
-	tiro->setSprite("Media/tiro.png");
+	Shoot tiro( 10, 10, ((SCREEN_WIDTH / 2) - 25), ((SCREEN_HEIGHT / 2) - 25));
+	tiro.setSprite("Media/tiro.png");
 
-	Asteroids* asteroids_do_game = new Asteroids(QUANTIDADE_ASTEROIDS, screen);
+	Asteroids asteroids_do_game(QUANTIDADE_ASTEROIDS, screen);
 
 
 	//Laço principal
@@ -65,14 +65,14 @@ int main(int argc, char const *argv[]){
 			if(event.type == SDL_KEYDOWN){
 
 				switch( event.key.keysym.sym ){
-					case SDLK_UP: { player->set_moving(50); break;}
-					case SDLK_LEFT:{ player->increaseAngulo(); break;}
-					case SDLK_RIGHT:{ player->decreaseAngulo(); break;}
+					case SDLK_UP: { player.set_moving(50); break;}
+					case SDLK_LEFT:{ player.increaseAngulo(); break;}
+					case SDLK_RIGHT:{ player.decreaseAngulo(); break;}
 					case SDLK_SPACE:{ 
-						if (tiro->get_moving() <= 50){
-							tiro->set_moving(100);
-							tiro->set_angulo( player->get_angulo() );
-							tiro->set_position( ( player->get_x() + (player->get_width() / 2) ), ( player->get_y() + (player->get_height() / 2) ) );
+						if (tiro.get_moving() <= 50){
+							tiro.set_moving(100);
+							tiro.set_angulo( player.get_angulo() );
+							tiro.set_position( ( player.get_x() + (player.get_width() / 2) ), ( player.get_y() + (player.get_height() / 2) ) );
 						}
 						break;
 					}
@@ -83,26 +83,26 @@ int main(int argc, char const *argv[]){
 
 		SDL_BlitSurface(background,NULL,screen,NULL);
 
-		player->blit(screen);
-		asteroids_do_game->blit_asteroids(screen);
+		player.blit(screen);
+		asteroids_do_game.blit_asteroids(screen);
 
 
-		asteroids_do_game->player_collision(player); //Detectando collision
+		asteroids_do_game.player_collision(&player); //Detectando collision
 
-		if (player->get_moving()){
-			player->moveNave(screen);
+		if (player.get_moving()){
+			player.moveNave(screen);
 		}
 
-		if (tiro->get_moving()){
-			tiro->blit(screen);
+		if (tiro.get_moving()){
+			tiro.blit(screen);
 
-			tiro->moveShoot(screen);
+			tiro.moveShoot(screen);
 
-			asteroids_do_game->shoot_collision(tiro); //Detectando collision
+			asteroids_do_game.shoot_collision(&tiro); //Detectando collision
 
 		}
 
-		asteroids_do_game->moveAsteroids(screen);
+		asteroids_do_game.moveAsteroids(screen);
 
 
 

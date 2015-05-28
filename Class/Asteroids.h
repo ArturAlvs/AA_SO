@@ -14,7 +14,6 @@ class Asteroids{
 
 	public:
 		Asteroids(int, SDL_Surface*);
-		~Asteroids();
 
 		//Blit
 		void blit_asteroids(SDL_Surface*);
@@ -23,16 +22,16 @@ class Asteroids{
 		void moveAsteroids(SDL_Surface *);
 
 		//Player collision
-		void player_collision(Nave *);
+		void player_collision(Nave*);
 
 		//Shoot collision
-		void shoot_collision(Shoot *);
+		void shoot_collision(Shoot*);
 
 		//Size
 		int get_quantidade();
 
 		//Add
-		void add_asteroids(int, SDL_Surface*);
+		void add_asteroids(Asteroid *);
 
 	
 };
@@ -40,10 +39,11 @@ class Asteroids{
 Asteroids::Asteroids(int quantidade_asteroids, SDL_Surface* screen){
 
 	sprite_asteroid_BIG = IMG_Load("Media/asteroid.png");
+	sprite_asteroid_SMALL = IMG_Load("Media/asteroid_small.png");
 
 	for (int i = 0; i < quantidade_asteroids; ++i){
 
-		Asteroid a = new Asteroid(true);
+		Asteroid a(true);
 
 		a.set_x( rand() % (screen->w - 50) );
 		a.set_y( rand() % (screen->h - 50) );
@@ -106,19 +106,18 @@ void Asteroids::shoot_collision(Shoot *tiro){
 		bool was_detected = vetor_Asteroids.at( i ).collision(tiro);
 
 		if (was_detected){
-			tiro->tiro_go_home();
 
-			cout << "! " << vetor_Asteroids.size() << endl;
+			tiro->tiro_go_home();		
 
-			vetor_Asteroids.erase( vetor_Asteroids.begin() + i );
-
-			cout << "@ " << vetor_Asteroids.size() << endl;
+			if (vetor_Asteroids.at(i).get_isBig()){
+				this->add_asteroids(&(vetor_Asteroids.at(i)));
+				vetor_Asteroids.at(i).set_isBig(false);
+			}else{
+				vetor_Asteroids.erase( vetor_Asteroids.begin() + i );
+			}
 
 		}
-
-
 	}
-
 }
 
 
@@ -128,18 +127,21 @@ int Asteroids::get_quantidade(){
 }
 
 //Add
-void Asteroids::add_asteroids(int quantidade_asteroids, SDL_Surface* screen){
+void Asteroids::add_asteroids(Asteroid *asteroid_parameter){
 
-	for (int i = 0; i < quantidade_asteroids; ++i){
+	Asteroid a(false);
 
-		Asteroid a = new Asteroid(true);
+	a.set_x( asteroid_parameter->get_x() );
+	a.set_y( asteroid_parameter->get_y() );
 
-		a.set_x( rand() % (screen->w - 50) );
-		a.set_y( rand() % (screen->h - 50) );
+	if (asteroid_parameter->get_angulo() > 180){
+		a.set_angulo( rand() % (180) );	
+	}else{
+		a.set_angulo( (rand() % 180) + 180 );	
 
-		a.set_angulo( rand() % 360 );
-
-		vetor_Asteroids.push_back( a );
 	}
+
+
+	vetor_Asteroids.push_back( a );
 
 }

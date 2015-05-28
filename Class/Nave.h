@@ -12,7 +12,6 @@ class Nave : public Object{
     	int moving;
 	public:
   		Nave(int, int, int, int);
-  		~Nave();
   		
   		//Move
   		void moveNave(SDL_Surface*);
